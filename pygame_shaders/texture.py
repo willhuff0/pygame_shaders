@@ -8,7 +8,7 @@ class Texture:
     """
     Responsible for handling an OpenGL texture object.
     """
-    def __init__(self, image: pygame.Surface, ctx: moderngl.Context) -> None:
+    def __init__(self, image: pygame.Surface, ctx: moderngl.Context, build_mipmaps: bool = False) -> None:
         image = pygame.transform.flip(image, False, True)
         self.image_width, self.image_height = image.get_rect().size
         img_data = pygame.image.tostring(image, "RGBA")
@@ -16,8 +16,10 @@ class Texture:
         self.texture.repeat_x = False
         self.texture.repeat_y = False
 
-        self.texture.build_mipmaps()
-        self.texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR_MIPMAP_LINEAR)
+        self.build_mipmaps = build_mipmaps
+        if self.build_mipmaps:
+            self.texture.build_mipmaps()
+            self.texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR_MIPMAP_LINEAR)
 
     def update(self, image: pygame.Surface) -> None:
         """
@@ -30,9 +32,10 @@ class Texture:
 
         self.texture.write(img_data)
 
-        # regenerate mipmaps from new data
-        self.texture.build_mipmaps()
-        self.texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR_MIPMAP_LINEAR)
+        if self.build_mipmaps:
+            # regenerate mipmaps from new data
+            self.texture.build_mipmaps()
+            self.texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR_MIPMAP_LINEAR)
 
     def as_surface(self) -> pygame.Surface:
         """

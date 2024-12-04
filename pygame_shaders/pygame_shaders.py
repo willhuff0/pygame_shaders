@@ -63,7 +63,7 @@ class Shader:
         shader = ctx.program(vertex_shader=vertex_src, fragment_shader=fragment_src)
         return shader
 
-    def __init__(self, vertex_path: str, fragment_path: str, target_surface: pygame.Surface) -> None:
+    def __init__(self, vertex_path: str, fragment_path: str, target_surface: pygame.Surface, enable_mipmaps: bool = False) -> None:
         self.ctx = moderngl.create_context()
         self.ctx.enable(moderngl.BLEND)
         self.ctx.blend_func = self.ctx.SRC_ALPHA, self.ctx.ONE_MINUS_SRC_ALPHA
@@ -74,7 +74,7 @@ class Shader:
         self.shader = Shader.create_vertfrag_shader(self.ctx, vertex_path, fragment_path)
         self.render_rect = screen_rect.ScreenRect(self.target_surface.get_size(),self.target_surface.get_size(), (0, 0), self.ctx, self.shader)
         
-        self.screen_texture = texture.Texture(pygame.Surface(self.target_surface.get_size()), self.ctx)
+        self.screen_texture = texture.Texture(pygame.Surface(self.target_surface.get_size()), self.ctx, enable_mipmaps)
         self.framebuffer = self.ctx.simple_framebuffer(size=self.target_surface.get_size(), components=4)
         self.scope = self.ctx.scope(self.framebuffer) 
 
