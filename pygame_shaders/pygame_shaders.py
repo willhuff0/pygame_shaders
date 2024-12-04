@@ -86,7 +86,7 @@ class Shader:
         """
 
         self.target_surface.fill(color)
-        self.ctx.clear(color=(color[0]/255, color[1]/255, color[2]/255))
+        self.ctx.clear(color=(color[0]/255, color[1]/255, color[2]/255, color[3]/255))
 
     def send(self, name: str, data: typing.Any) -> None:
         """
@@ -157,7 +157,7 @@ class Shader:
         with self.scope:
             self.framebuffer.use()
             self.render_rect.vao.render()
-            surf = pygame.image.frombuffer(self.framebuffer.read(), self.target_surface.get_size(), "RGB")
+            surf = pygame.image.frombuffer(self.framebuffer.read(components=4), self.target_surface.get_size(), "RGBA")
         return pygame.transform.flip(surf, False, True)
 
 class ComputeShader:

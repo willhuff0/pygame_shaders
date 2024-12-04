@@ -13,7 +13,11 @@ class Texture:
         self.image_width, self.image_height = image.get_rect().size
         img_data = pygame.image.tostring(image, "RGBA")
         self.texture = ctx.texture(size=image.get_size(), components=4, data=img_data)
-        self.texture.filter = (moderngl.NEAREST, moderngl.NEAREST)
+        self.texture.repeat_x = False
+        self.texture.repeat_y = False
+
+        self.texture.build_mipmaps()
+        self.texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR_MIPMAP_LINEAR)
 
     def update(self, image: pygame.Surface) -> None:
         """
@@ -25,6 +29,10 @@ class Texture:
         img_data = pygame.image.tostring(image, "RGBA")
 
         self.texture.write(img_data)
+
+        # regenerate mipmaps from new data
+        self.texture.build_mipmaps()
+        self.texture.filter = (moderngl.LINEAR_MIPMAP_LINEAR, moderngl.LINEAR_MIPMAP_LINEAR)
 
     def as_surface(self) -> pygame.Surface:
         """
