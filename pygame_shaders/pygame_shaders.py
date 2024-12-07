@@ -156,6 +156,7 @@ class Shader:
 
         with self.scope:
             self.framebuffer.use()
+            self.ctx.clear()
             self.render_rect.vao.render()
             surf = pygame.image.frombuffer(self.framebuffer.read(components=4), self.target_surface.get_size(), "RGBA")
         return pygame.transform.flip(surf, False, True)
